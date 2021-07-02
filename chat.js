@@ -1,8 +1,21 @@
 const express = require("express");
 const app = express();
+const socketio = require("socket.io");
 
 app.use(express.static(__dirname + "/publics"));
 
-app.listen(3000, () => {
-  console.log("Server running on port 3000");
+const expressServer = app.listen(8000, () => {
+  console.log("Server running on port 8000");
+});
+
+const io = socketio(expressServer);
+
+//Wait for any socket to connect and respond
+io.on("connection", (socket) => {
+  socket.emit("messageFromServer", {
+    data: "Welcome to the socketio Server!!  ",
+  });
+  socket.on("messageToServer", (dataFromClient) => {
+    console.log(dataFromClient);
+  });
 });

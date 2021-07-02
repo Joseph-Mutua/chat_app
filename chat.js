@@ -18,4 +18,9 @@ io.on("connection", (socket) => {
   socket.on("messageToServer", (dataFromClient) => {
     console.log(dataFromClient);
   });
+
+  socket.on("newMessageToServer", (msg) => {
+    //Emit the message to all connected Clients
+    io.emit("messageToClients", { text: msg.text });
+  });
 });

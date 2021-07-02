@@ -18,6 +18,20 @@
         width: 100%;
         height: 35px;
       }
+
+      #messages {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      #messages li {
+        padding: 5px 10px;
+      }
+
+      #messages li:nth-child(odd) {
+        background: #eee;
+      }
     </style>
 
     <div class="container">
@@ -35,7 +49,9 @@
               <input class="btn btn-primary" type="submit" value="Send" />
             </div>
           </form>
-          <ul id="messages">THIS WILL BE POPULATED BY JS</ul>
+          <div>
+            <ul id="messages"></ul>
+          </div>
         </div>
       </div>
     </div>
@@ -57,6 +73,22 @@
       //     console.log(latency);
       //     console.log("Pong was sent to the Server!!");
       //   });
+
+      document
+        .querySelector("#message-form")
+        .addEventListener("submit", (e) => {
+          //Prevent Form from utomatic Submission
+          e.preventDefault();
+          let inputBox = document.querySelector("#user-message");
+          const newMessage = inputBox.value;
+
+          socket.emit("newMessageToServer", { text: newMessage });
+          inputBox.value = "";
+        });
+
+      socket.on("messageToClients", (msg) => {
+        document.querySelector("#messages").innerHTML += `<li>${msg.text}</li>`;
+      });
     </script>
   </body>
 </html>
